@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Timothy Collinson's Skill Picklist for Nobles</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100vw;
+                height: 100vh;
+                background: #eee;
+            }
+
+            header {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                text-align: center;
+                margin-bottom: 2rem;
+                padding: 2rem 0;
+            }
+
+            .content {
+                display: flex;
+                flex: 1;
+            }
+            
+            form {
+                border: 2px solid darkgrey;
+                border-radius: 1rem;
+            }
+
+            .display-rolls {
+                display: flex;
+                padding: 1rem 2rem;
+            }
+            
+            .form-group {
+                margin-right: 2rem;
+                justify-content: space-between;
+            }
+            
+            label {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-weight: 550;
+                padding-right: 1rem;
+            }
+            
+            .form-group.result {
+                padding: 4rem 0;
+                text-align: center;
+            }
+            
+            input[type="button"] {
+                padding: .5rem 1rem;
+            }
+            
+            input[type="text"] {
+                border: none;
+                background: lightgrey;
+                padding: .5rem 1rem;
+            }
+            footer {
+                padding: .5rem 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="page-container">
+            <header>
+                <h1>Timothy Collinson's<br>Skill Picklist for Nobles</h1>
+            </header>
+            <div class="content">
+                <div class="form-div">
+                    <form>
+                        <div class="display-rolls">
+                            <div class="form-group">
+                                <label for="d3">D3: </label>
+
+                                <input type="text" readonly name="d3" id="d3"
+                                    size="3">
+                            </div>
+                            <div class="form-group">
+                                <label for="d6_1">D6 #1</label>
+                                <input type="text" readonly name="d6_1"
+                                    id="d6_1" size="3">
+                            </div>
+                            <div class="form-group">
+                                <label for="d6_2">D6 #2</label>
+                                <input type="text" readonly name="d6_2"
+                                    id="d6_2" size="3">
+                            </div>
+                            <div class="form-group">
+                                <input type="button" value="Roll" id="roll-btn" onclick="rollTheDice()">
+                            </div>
+                        </div>
+                        <div class="form-group result">
+                            <label for="skill">Skill Result: </label>
+                            <input type="text" id="skill-result" name="skill-result" size="32">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <footer>
+                Copyright &copy; 2024, Timothy Collinson
+            </footer>
+        </div>
+        
+        <script>
+            var btn = document.getElementById("roll-btn");
+            var d3 = document.getElementById("d3");
+            var d6_1 = document.getElementById("d6_1");
+            var d6_2 = document.getElementById("d6_2");
+            var res = document.getElementById("skill-result");
+            
+            const skillTable = [
+                                [
+                                    [
+                                        /* 1-2 / 1 / 1 */ "Admin",
+                                        /* 1-2 / 1 / 2 */ "Advocate",
+                                        /* 1-2 / 1 / 3 */ "Advocate",
+                                        /* 1-2 / 1 / 4 */ "Advocate",
+                                        /* 1-2 / 1 / 5 */ "Animals: Handling",
+                                        /* 1-2 / 1 / 6 */ "Animals: Handling"
+                                    ],
+                                    [
+                                        /* 1-2 / 2 / 1 */ "Animals: Handling",
+                                        /* 1-2 / 2 / 2 */ "Animals: Training",
+                                        /* 1-2 / 2 / 3 */ "Art",
+                                        /* 1-2 / 2 / 4 */ "Art",
+                                        /* 1-2 / 2 / 5 */ "Art",
+                                        /* 1-2 / 2 / 6 */ "Art"
+                                    ],
+                                    [
+                                        /* 1-2 / 3 / 1 */ "Art",
+                                        /* 1-2 / 3 / 2 */ "Astrogation",
+                                        /* 1-2 / 3 / 3 */ "Athletics",
+                                        /* 1-2 / 3 / 4 */ "Athletics",
+                                        /* 1-2 / 3 / 5 */ "Athletics",
+                                        /* 1-2 / 3 / 6 */ "Broker"
+                                    ],
+                                    [
+                                        /* 1-2 / 4 / 1 */ "Broker",
+                                        /* 1-2 / 4 / 2 */ "Carouse",
+                                        /* 1-2 / 4 / 3 */ "Carouse",
+                                        /* 1-2 / 4 / 4 */ "Carouse",
+                                        /* 1-2 / 4 / 5 */ "Deception",
+                                        /* 1-2 / 4 / 6 */ "Deception"
+                                    ],
+                                    [
+                                        /* 1-2 / 5 / 1 */ "Deception",
+                                        /* 1-2 / 5 / 2 */ "Deception",
+                                        /* 1-2 / 5 / 3 */ "Diplomat",
+                                        /* 1-2 / 5 / 4 */ "Diplomat",
+                                        /* 1-2 / 5 / 5 */ "Diplomat",
+                                        /* 1-2 / 5 / 6 */ "Diplomat"
+                                    ],
+                                    [
+                                        /* 1-2 / 6 / 1 */ "Drive",
+                                        /* 1-2 / 6 / 2 */ "Drive",
+                                        /* 1-2 / 6 / 3 */ "Drive",
+                                        /* 1-2 / 6 / 4 */ "Electronics",
+                                        /* 1-2 / 6 / 5 */ "Electronics",
+                                        /* 1-2 / 6 / 6 */ "Electronics"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        /* 3-4 / 1 / 1 */ "Engineer",
+                                        /* 3-4 / 1 / 2 */ "Explosives",
+                                        /* 3-4 / 1 / 3 */ "Flyer",
+                                        /* 3-4 / 1 / 4 */ "Flyer",
+                                        /* 3-4 / 1 / 5 */ "Flyer",
+                                        /* 3-4 / 1 / 6 */ "Flyer"
+                                    ],
+                                    [
+                                        /* 3-4 / 2 / 1 */ "Gambler",
+                                        /* 3-4 / 2 / 2 */ "Gambler",
+                                        /* 3-4 / 2 / 3 */ "Gambler",
+                                        /* 3-4 / 2 / 4 */ "Gunner",
+                                        /* 3-4 / 2 / 5 */ "Gun Combat",
+                                        /* 3-4 / 2 / 6 */ "Gun Combat"
+                                    ],
+                                    [
+                                        /* 3-4 / 3 / 1 */ "Gun Combat",
+                                        /* 3-4 / 3 / 2 */ "Heavy Weapons",
+                                        /* 3-4 / 3 / 3 */ "Investigate",
+                                        /* 3-4 / 3 / 4 */ "Investigate",
+                                        /* 3-4 / 3 / 5 */ "Investigate",
+                                        /* 3-4 / 3 / 6 */ "Jack-of-All-Trades"
+                                    ],
+                                    [
+                                        /* 3-4 / 4 / 1 */ "Jack-of-All-Trades",
+                                        /* 3-4 / 4 / 2 */ "Language",
+                                        /* 3-4 / 4 / 3 */ "Language",
+                                        /* 3-4 / 4 / 4 */ "Language",
+                                        /* 3-4 / 4 / 5 */ "Language",
+                                        /* 3-4 / 4 / 6 */ "Leadership"
+                                    ],
+                                    [
+                                        /* 3-4 / 5 / 1 */ "Leadership",
+                                        /* 3-4 / 5 / 2 */ "Leadership",
+                                        /* 3-4 / 5 / 3 */ "Leadership",
+                                        /* 3-4 / 5 / 4 */ "Mechanic",
+                                        /* 3-4 / 5 / 5 */ "Mechanic",
+                                        /* 3-4 / 5 / 6 */ "Medic"
+                                    ],
+                                    [
+                                        /* 3-4 / 6 / 1 */ "Medic",
+                                        /* 3-4 / 6 / 2 */ "Melee",
+                                        /* 3-4 / 6 / 3 */ "Melee: Unarmed",
+                                        /* 3-4 / 6 / 4 */ "Melee: Blade",
+                                        /* 3-4 / 6 / 5 */ "Melee: Blade",
+                                        /* 3-4 / 6 / 6 */ "Navigation"
+                                    ]
+                                ],
+                                [
+                                    [
+                                        /* 5-6 / 1 / 1 */ "Navigation",
+                                        /* 5-6 / 1 / 2 */ "Persuade",
+                                        /* 5-6 / 1 / 3 */ "Persuade",
+                                        /* 5-6 / 1 / 4 */ "Persuade",
+                                        /* 5-6 / 1 / 5 */ "Persuade",
+                                        /* 5-6 / 1 / 6 */ "Pilot"
+                                    ],
+                                    [
+                                        /* 5-6 / 2 / 1 */ "Pilot",
+                                        /* 5-6 / 2 / 2 */ "Profession",
+                                        /* 5-6 / 2 / 3 */ "Profession",
+                                        /* 5-6 / 2 / 4 */ "Profession",
+                                        /* 5-6 / 2 / 5 */ "Profession",
+                                        /* 5-6 / 2 / 6 */ "Recon"
+                                    ],
+                                    [
+                                        /* 5-6 / 3 / 1 */ "Recon",
+                                        /* 5-6 / 3 / 2 */ "Science",
+                                        /* 5-6 / 3 / 3 */ "Science",
+                                        /* 5-6 / 3 / 4 */ "Science",
+                                        /* 5-6 / 3 / 5 */ "Science",
+                                        /* 5-6 / 3 / 6 */ "Seafarer"
+                                    ],
+                                    [
+                                        /* 5-6 / 4 / 1 */ "Seafarer",
+                                        /* 5-6 / 4 / 2 */ "Stealth",
+                                        /* 5-6 / 4 / 3 */ "Stealth",
+                                        /* 5-6 / 4 / 4 */ "Steward",
+                                        /* 5-6 / 4 / 5 */ "Steward",
+                                        /* 5-6 / 4 / 6 */ "Streetwise"
+                                    ],
+                                    [
+                                        /* 5-6 / 5 / 1 */ "Streetwise",
+                                        /* 5-6 / 5 / 2 */ "Streetwise",
+                                        /* 5-6 / 5 / 3 */ "Survival",
+                                        /* 5-6 / 5 / 4 */ "Survival",
+                                        /* 5-6 / 5 / 5 */ "Survival",
+                                        /* 5-6 / 5 / 6 */ "Tactics",
+                                    ],
+                                    [
+                                        /* 5-6 / 6 / 1 */ "Tactics",
+                                        /* 5-6 / 6 / 2 */ "Vacc Suit",
+                                        /* 5-6 / 6 / 3 */ "Vacc Suit",
+                                        /* 5-6 / 6 / 4 */ "Vacc Suit",
+                                        /* 5-6 / 6 / 5 */ "Talent (1=Telepathy, 2=Clairvoyance, 3=Telekinesis, 4=Awareness, 5=Teleportation, 6=two Talents)",
+                                        /* 5-6 / 6 / 6 */ "Talent (1=Telepathy, 2=Clairvoyance, 3=Telekinesis, 4=Awareness, 5=Teleportation, 6=two Talents)"
+                                    ]
+                                ]
+            ]
+            
+            const talents = ["Telepathy", "Clairvoyance", "Telekinesis", "Awareness", "Teleportation", "Special"];
+            
+            
+            function rollD3() {
+                return Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+            }
+            
+            function rollD6() {
+                return Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+            }
+            
+            function rollLevel() {
+                var res = Math.floor(Math.random() * 8);
+                
+                if (res < 2) {
+                    return 0;
+                } else if (res < 4) {
+                    return 1;
+                } else if (res < 7) {
+                    return 2;
+                } else {
+                    return 3;
+                }
+            }
+            
+            function getTalents() {
+                var talentList = '';
+                var counter = 1;
+                
+                while (counter) {
+                    var idx = rollD6() - 1;
+                    var lcl_talent = talents[idx];
+                    
+                    counter -= 1;
+                    
+                    if (lcl_talent == 'Special') {
+                        // roll for two more talents
+                        counter += 2;
+                    } else {
+                        talentList = talentList + lcl_talent + "-" + rollLevel() + ", ";
+                    }
+                    
+                }
+                
+                if (talentList.at(-1) == ',') {
+                    talentList = talentList.slice(0, -1);
+                }
+                
+                return talentList;
+            }
+            
+            function rollTheDice() {
+                var lcl_d3 = rollD3();
+                var lcl_d6_1 = rollD6();
+                var lcl_d6_2 = rollD6();
+                
+                d3.value = lcl_d3;
+                d6_1.value = lcl_d6_1;
+                d6_2.value = lcl_d6_2;
+                
+                var idx0 = lcl_d3 - 1;
+                var idx1 = lcl_d6_1 - 1;
+                var idx2 = lcl_d6_2 - 1;
+
+                var skill = skillTable[idx0][idx1][idx2];
+                
+                if (skill.includes("Talent")) {
+                    res.value = getTalents();
+                } else {
+                    res.value = `${skill}-${rollLevel()}`;
+                }
+            }
+        </script>
+    </body>
+
+</html>
